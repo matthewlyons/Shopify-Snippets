@@ -1,0 +1,56 @@
+{% unless product.has_only_default_variant %}
+<!-- Generate Variables For Each Option -->
+{% for product_option in product.options_with_values %}
+var{{ product_option.name | remove: " " | remove: "?" }} = "";
+{% endfor %}
+
+<!-- Field Set For Each Option -->
+<section>
+    {% for product_option in product.options_with_values %}
+    <fieldset id="{{ product_option.name | remove: " " | remove: "?" }}"
+        name="{{ product_option.name | remove: " " | remove: "?" }}">
+        <p>Pick Your {{ product_option.name }}</p>
+        <!-- Button for Each Options Value -->
+        <ul>
+            {% for value in product_option.values %}
+            <li>
+                <label>
+                    <input type="radio" value="{{ value }}" class="Selector"
+                        name="{{ product_option.name | remove: " " }}" />
+                    <span>{{ value }}</span>
+                </label>
+            </li>
+            {% endfor %}
+        </ul>
+    </fieldset>
+    {% endfor %}
+</section>
+
+<!-- List Of Product Variants With Data Attributes For Their Option: Value Pairs -->
+<div>
+    {%- for variant in product.variants -%}
+    <input type="radio" name="Variant" value="{{variant.id}}" {% if variant.option1 %} data-
+        {{ product.options[0] | remove: " " | remove: "?" | downcase }}="{{variant.option1}}" {% endif %}
+        {% if variant.option2 %} data-
+        {{ product.options[1] | remove: " " | remove: "?" | downcase }}="{{variant.option2}}" {% endif %}
+        {% if variant.option3 %} data-
+        {{ product.options[2] | remove: " " | remove: "?" | downcase }}="{{variant.option3}}" {% endif %}
+        class="ProductVariant">
+    {{variant.title}}
+    {%- endfor -%}
+</div>
+
+<script>
+    $(".Selector").click(function () {
+        variantSelect();
+    });
+    function variantSelect() {
+        $(".Selector:checked").each(function () {
+            window[$(this).attr('name')] = $(this).val();
+        });
+        if ({% - for product_option in product.options_with_values -%} {% if forloop.last == true %} { { product_option.name | remove: " " | remove: "?" } } {% else %} { { product_option.name | remove: " " | remove: "?" } } && {% endif %}{% - endfor -%}) {
+        $(".ProductVariant{% for product_option in product.options_with_values %}[data-{{ product_option.name | remove: " " | remove: " ? " }}='" + {{ product_option.name | remove: " " | remove: "?" }} + "']{% endfor %}").click();
+        }
+    }
+</script>
+{% endunless %}
