@@ -1,0 +1,30 @@
+<head>
+    <link rel="stylesheet" type="text/css" href="slick/slick.css"/>
+    <link rel="stylesheet" type="text/css" href="slick/slick-theme.css"/>
+</head>
+<body>
+    <section>
+        <div class="slider slider-for sliderFull">
+            {% for image in product.images %}
+                <div>
+                    <img src="{{ image.src | product_img_url: 'large' }}" class="sliderFull">
+                </div>
+            {% endfor %}
+        </div>
+        <div class="slider slider-nav">
+            {% for image in product.images %}
+                <div>
+                    <img src="{{ image.src | product_img_url: 'small' }}" class="MiniSlider">
+                </div>
+            {% endfor %}
+        </div>
+    </section>
+
+    <script>
+        $('.slider-for').slick({slidesToShow: 1, slidesToScroll: 1, arrows: false, fade: true, asNavFor: '.slider-nav'});
+        $('.slider-nav').slick({slidesToShow: 4, slidesToScroll: 1, asNavFor: '.slider-for', focusOnSelect: true, dots: false});
+    </script>
+    <script type="text/javascript" src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="//code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
+    <script type="text/javascript" src="slick/slick.min.js"></script>
+</body>
